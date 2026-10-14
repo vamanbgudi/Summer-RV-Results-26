@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Summer Semester RV Results | Rajeev Institute of Technology, Hassan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .print-only { display: none; }
+    @media print {
+      @page { size: A4 portrait; margin: 12mm; }
+      .no-print { display: none !important; }
+      .print-only { display: block !important; }
+      body { background: #ffffff !important; color: #000000 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-card { box-shadow: none !important; border: 2px solid #1e293b !important; border-radius: 8px !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between font-sans">
+
+  <!-- Official Screen Header -->
+  <header class="no-print bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white shadow-lg border-b-4 border-amber-400">
+    <div class="max-w-4xl mx-auto px-4 py-6 flex flex-col items-center text-center">
+      <!-- Embedded Official RIT Logo -->
+      <div class="w-20 h-20 rounded-2xl bg-white p-2 border-2 border-amber-400 flex items-center justify-center mb-3 shadow-lg">
+        <img id="screenLogo" alt="RIT Hassan Logo" class="w-full h-full object-contain" />
+      </div>
+      <h1 class="text-2xl md:text-3xl font-extrabold tracking-wide uppercase">
+        Rajeev Institute of Technology, Hassan
+      </h1>
+      <p class="text-blue-200 text-xs md:text-sm font-medium mt-1">
+        An Autonomous Institution Affiliated to VTU, Belagavi
+      </p>
+      <div class="mt-4 inline-flex items-center gap-2 bg-amber-400 text-slate-950 font-extrabold px-5 py-1.5 rounded-full text-sm md:text-base shadow-md">
+        <span>Summer Semester RV Results (Sept./Oct. 2026)</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl w-full mx-auto px-4 py-8 flex-grow">
+
+    <!-- Student USN Input Box (Hidden on Print) -->
+    <section class="no-print bg-white rounded-2xl shadow-md border border-slate-200 p-6 mb-8">
+      <form id="usnForm" class="flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
+        <div class="flex-grow">
+          <label for="usnInput" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
+            Enter University Seat Number (USN)
+          </label>
+          <input
+            type="text"
+            id="usnInput"
+            maxlength="12"
+            required
+            autocomplete="off"
+            placeholder="Enter your 10-character USN (e.g., 4RA25...)"
+            class="w-full px-4 py-3 text-base font-mono uppercase bg-slate-50 border-2 border-slate-300 rounded-xl focus:outline-none focus:border-blue-700 focus:bg-white transition"
+          />
+        </div>
+        <button
+          type="submit"
+          class="bg-blue-800 hover:bg-blue-900 active:bg-blue-950 text-white font-bold px-8 py-3.5 rounded-xl shadow transition flex items-center justify-center gap-2 cursor-pointer"
+        >
+          <span>View Result</span>
+        </button>
+      </form>
+      <p class="mt-2.5 text-xs text-slate-500">
+        Enter your official University Seat Number to view and download your updated Summer Semester Revaluation (RV) marks statement.
+      </p>
+    </section>
+
+    <!-- Error / Not Found Alert -->
+    <div id="errorBox" class="no-print hidden bg-red-50 border-l-4 border-red-600 text-red-900 p-5 rounded-xl shadow-sm mb-6">
+      <h3 class="font-bold text-base">Result Not Found</h3>
+      <p id="errorText" class="text-sm text-red-700 mt-1"></p>
+    </div>
+
+    <!-- Student Result Card -->
+    <section id="resultSection" class="hidden">
+      <div class="print-card bg-white rounded-2xl shadow-lg border border-slate-200 overflow-hidden">
+
+        <!-- Official Print-Only Header inside the Marks Card -->
+        <div class="print-only border-b-2 border-slate-800 p-5 bg-white">
+          <div class="flex items-center justify-center gap-5">
+            <img id="printLogo" alt="RIT Logo" class="w-16 h-16 object-contain" />
+            <div class="text-center">
+              <h1 class="text-xl font-extrabold uppercase text-slate-900">Rajeev Institute of Technology, Hassan</h1>
+              <p class="text-xs font-semibold text-slate-600 mt-0.5">An Autonomous Institution Affiliated to VTU, Belagavi</p>
+              <h2 class="text-sm font-extrabold uppercase tracking-wider text-blue-900 mt-2 underline">
+                Summer Semester End Examinations Results (Updated After RV) — Sept./Oct. 2026
+              </h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen Card Top Banner -->
+        <div class="no-print bg-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-white p-1 flex items-center justify-center">
+              <img id="cardMiniLogo" alt="RIT" class="w-full h-full object-contain" />
+            </div>
+            <div>
+              <span class="text-xs uppercase tracking-widest text-amber-400 font-bold block">Provisional Marks Statement</span>
+              <h2 class="text-lg md:text-xl font-bold mt-0.5">Summer Semester RV Results (Sept./Oct. 2026)</h2>
+            </div>
+          </div>
+          <div id="overallStatusBadge"></div>
+        </div>
+
+        <!-- Student Profile Details Grid -->
+        <div class="p-6 bg-slate-50 border-b border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-500 font-semibold uppercase block">Student Name</span>
+            <span id="stuName" class="text-sm md:text-base font-extrabold text-slate-900 mt-1 block"></span>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-500 font-semibold uppercase block">USN</span>
+            <span id="stuUsn" class="text-sm md:text-base font-mono font-extrabold text-blue-800 mt-1 block"></span>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-500 font-semibold uppercase block">Branch / Programme</span>
+            <span id="stuBranch" class="text-sm md:text-base font-bold text-slate-800 mt-1 block"></span>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+            <span class="text-xs text-slate-500 font-semibold uppercase block">Sl. No.</span>
+            <span id="stuSl" class="text-sm md:text-base font-bold text-slate-700 mt-1 block"></span>
+          </div>
+        </div>
+
+        <!-- Course-Wise Marks Table -->
+        <div class="p-6">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+            Registered Courses &amp; Examination Marks
+          </h3>
+          <div class="overflow-x-auto rounded-xl border border-slate-300">
+            <table class="w-full text-left border-collapse text-xs md:text-sm">
+              <thead>
+                <tr class="bg-slate-100 text-slate-800 border-b border-slate-300 font-bold">
+                  <th class="py-3 px-3">Course Code</th>
+                  <th class="py-3 px-3">Type</th>
+                  <th class="py-3 px-3">Course Title</th>
+                  <th class="py-3 px-3 text-center">Cr</th>
+                  <th class="py-3 px-3 text-center">CIE</th>
+                  <th class="py-3 px-3 text-center">SEE (TH)</th>
+                  <th class="py-3 px-3 text-center">SEE (PR)</th>
+                  <th class="py-3 px-3 text-center">Total</th>
+                  <th class="py-3 px-3 text-center">Grade</th>
+                  <th class="py-3 px-3 text-center">GP</th>
+                  <th class="py-3 px-3 text-center">CP</th>
+                </tr>
+              </thead>
+              <tbody id="courseTableBody" class="divide-y divide-slate-200"></tbody>
+            </table>
+          </div>
+
+          <!-- Footnote Legend (if applicable) -->
+          <div id="rvFootnote" class="hidden mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-900 font-medium"></div>
+        </div>
+
+        <!-- GPA & Credit Summary Footer -->
+        <div class="px-6 py-5 bg-slate-50 border-t border-slate-200 grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div class="bg-white p-3 rounded-xl border border-slate-200 text-center">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase block">Credits Registered</span>
+            <span id="stuCrReg" class="text-lg font-extrabold text-slate-800 mt-0.5 block"></span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 text-center">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase block">Credits Earned</span>
+            <span id="stuCrEarn" class="text-lg font-extrabold text-emerald-700 mt-0.5 block"></span>
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-slate-200 text-center">
+            <span class="text-[11px] text-slate-500 font-semibold uppercase block">Total Credit Pts</span>
+            <span id="stuTotCp" class="text-lg font-extrabold text-slate-800 mt-0.5 block"></span>
+          </div>
+          <div class="bg-amber-50 p-3 rounded-xl border border-amber-200 text-center">
+            <span class="text-[11px] text-amber-900 font-bold uppercase block">Summer SGPA</span>
+            <span id="stuSgpa" class="text-xl font-extrabold text-amber-700 mt-0.5 block"></span>
+          </div>
+          <div class="bg-blue-50 p-3 rounded-xl border border-blue-200 text-center col-span-2 sm:col-span-1">
+            <span class="text-[11px] text-blue-900 font-bold uppercase block">Overall CGPA</span>
+            <span id="stuCgpa" class="text-xl font-extrabold text-blue-800 mt-0.5 block"></span>
+          </div>
+        </div>
+
+        <!-- Print-Only Official Signature & Disclaimer Block -->
+        <div class="print-only px-6 pt-12 pb-6 bg-white border-t border-slate-300">
+          <div class="flex justify-between items-end text-xs font-bold text-slate-800 mt-8">
+            <div class="text-left">
+              <p class="font-normal text-slate-500">Date of Generation: <span id="printDate"></span></p>
+              <p class="font-normal text-slate-500 mt-0.5">Note: This is a computer-generated provisional result sheet.</p>
+            </div>
+            <div class="text-center border-t border-slate-800 pt-1.5 px-6">
+              Controller of Examinations
+            </div>
+          </div>
+        </div>
+
+        <!-- Screen Action Bar -->
+        <div class="no-print px-6 py-4 bg-white border-t border-slate-200 flex flex-wrap items-center justify-between gap-3">
+          <span class="text-xs text-slate-500">
+            CIE: Continuous Internal Evaluation • SEE: Semester End Exam • GP: Grade Point • CP: Credit Point
+          </span>
+          <button
+            onclick="window.print()"
+            class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl shadow transition cursor-pointer flex items-center gap-2"
+          >
+            <span>🖨️ Print / Save as PDF</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="no-print bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+    © 2026 Rajeev Institute of Technology, Hassan • Summer Semester RV Results Portal
+  </footer>
+
+  <!-- Embedded Official Logo + Dataset (180 Students, 641 Course Registrations) -->
+  <script>
+    const LOGO_DATA_URI = "data:image/png;base64,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";
+
+    document.getElementById('screenLogo').src = LOGO_DATA_URI;
+    document.getElementById('printLogo').src = LOGO_DATA_URI;
+    document.getElementById('cardMiniLogo').src = LOGO_DATA_URI;
+
+    const DB = {"courses":[["RMTS101","PCC","Calculus and Linear Algebra",4],["RCDS103","PCC","Computer Aided Engineering Drawing",3],["REEC104","PCC","Introduction to Electronics and Communication Engineering",3],["RMTS201","PCC","Numerical Methods",4],["RPPY205","IPCC","Python Programming",4],["RPHS102","IPCC","Quantum Physics and Applications",4],["RSPC105","PCC","Programming in C",3],["RSPCL107","PCC","C Programming Lab",1],["RKSK109","PCC","Samskrutika Kannada",1],["RCHS202","IPCC","Applied Chemistry for Smart Systems",4],["RAIDT108","PCC","Innovation Design Thinking",1],["RAIA203","PCC","Introduction to AI and Applications",3],["RECV104","PCC","Building Sciences and Mechanics",3],["REEE204","PCC","Introduction to Electrical Engineering",3],["RSPC205","PCC","Programming in C",3],["RPPY105","IPCC","Python Programming",4],["RAIA103","PCC","Introduction to AI and Applications",3],["RPHS202","IPCC","Quantum Physics and Applications",4],["RCDS203","PCC","Computer Aided Engineering Drawing",3],["RKSK209","PCC","Samskrutika Kannada",1],["RCHS102","IPCC","Applied Chemistry for Smart Systems",4],["RAEG106","PCC","Communication Skills",1],["RAIA103","PCC","Introduction to AI and Applications   &",3],["RSPCL207","PCC","C Programming Lab",1],["RMTC101","PCC","DifferentialCalculus and Linear Algebra",4],["RCHC102","IPCC","Applied Chemistry for Sustainable Structure and Material Design",4],["RPCP105","IPCC","Introduction to C Programming",4],["RAIDT108","PCC","Innovation and Design Thinking Lab",1],["RMTC201","PCC","Differential Calculus and Numerical Methods",4],["RPHC202","IPCC","Physics for Sustainable Structure Systems",4],["RCDC203","PCC","Computer Aided Engineering Drawing",3],["REEC204","PCC","Introduction to Electronics and Communication Engineering",3],["RSCV205","PCC","Engineering Mechanics",3],["RMTE101","PCC","DifferentialCalculus and Linear Algebra",4],["RPHN102","IPCC","Quantum Physics and Electronic Sensors",4],["REIT104","PCC","Essentials of Information Technology",3],["RSEC105","PCC","Fundamentals of Electronics & Communication Engineering",3],["RCHE202","IPCC","Applied Chemistry for Emerging Electronics",4],["RPCP205","IPCC","Introduction to C Programming",4],["RMTE201","PCC","Calculus, Laplace and Numerical Methods",4],["RECV204","PCC","Building Sciences and Mechanics",3],["RAEG206","PCC","Communication Skills",1],["RAIA203","PCC","Introduction to AI and Applications  $",3],["RCDN103","PCC","Computer Aided Engineering Drawing",3],["RPHE102","IPCC","Physics of Electrical Engineering Materials",4],["RSEE105","PCC","Basics of Electrical Engineering",3],["RSEEL107","PCC","Basic Electrical Engineering Lab",1],["RAIDP208","PCC","Interdiscplinary Project Learning",1],["RCDE103","PCC","Computer Aided Engineering Drawing",3],["RMTM101","PCC","DifferentialCalculus and Linear Algebra",4],["RCHM102","IPCC","Applied Chemistry for Advanced Metal Protection and Sustainable Energy Systems",4],["RMTM201","PCC","Multivariable Calculus and Numerical Methods",4],["RPHM202","IPCC","Physics of Materials",4],["RSME205","PCC","Elements of Mechanical Engineering",3],["RCDM203","PCC","Computer Aided Engineering Drawing",3],["RAIDP208","PCC","Interdisciplinary Project-Based Learning",1]],"students":{"4RA25AD005":[1,"Apthi K R","AI & DS",18,7,32,1.78,5.69,[[0,35,12,"-",47,"F",0,0],[1,24,22,"-",46,"P",4,12],[2,35,12,"-",47,"F",0,0],[3,36,12,"-",48,"F",0,0],[4,34,9,11,54,"C",5,20]]],"4RA25AD006":[2,"Arfa Javeriya","AI & DS",8,4,20,2.5,6.28,[[5,27,10,16,53,"C",5,20],[3,30,10,"-",40,"F",0,0]]],"4RA25AD009":[3,"Basangoud Balavantaray Sasanur","AI & DS",4,4,28,7.0,7.2,[[3,34,29,"-",63,"B+",7,28]]],"4RA25AD011":[4,"Bhanupriya","AI & DS",4,0,0,0.0,7.28,[[3,32,11,"-",43,"F",0,0]]],"4RA25AD021":[5,"Kavana H A","AI & DS",4,4,28,7.0,7.2,[[3,35,31,"-",66,"B+",7,28]]],"4RA25AD023":[6,"Kowshik Gowda S N","AI & DS",15,7,28,1.87,5.41,[[0,37,11,"-",48,"F",0,0],[5,26,7,10,43,"F",0,0],[1,21,24,"-",45,"P",4,12],[3,22,18,"-",40,"P",4,16]]],"4RA25AD026":[7,"Madan M N","AI & DS",8,4,20,2.5,5.94,[[5,25,6,13,44,"F",0,0],[3,32,18,"-",50,"C",5,20]]],"4RA25AD044":[8,"Sanjana T K","AI & DS",4,4,28,7.0,7.33,[[3,43,24,"-",67,"B+",7,28]]],"4RA25AD049":[9,"Sneha Marina","AI & DS",4,4,24,6.0,7.15,[[3,37,22,"-",59,"B",6,24]]],"4RA25AD052":[10,"Thanwish S R","AI & DS",17,9,50,2.94,5.78,[[5,28,3,11,42,"F",0,0],[6,23,18,"-",41,"P",4,12],[7,37,"-",38,75,"A",8,8],[8,39,20,"-",59,"B",6,6],[3,31,11,"-",42,"F",0,0],[9,31,11,13,55,"B",6,24]]],"4RA25AD054":[11,"Usha Kiran","AI & DS",3,3,15,5.0,6.28,[[2,34,19,"-",53,"C",5,15]]],"4RA25CI001":[12,"Aishwarya B R","CSE(AIML)",4,4,36,9.0,7.73,[[0,39,48,"-",87,"A+",9,36]]],"4RA25CI008":[13,"Chiranth M","CSE(AIML)",14,14,86,6.14,6.75,[[0,32,18,"-",50,"C",5,20],[5,34,9,13,56,"B",6,24],[1,31,34,"-",65,"B+",7,21],[2,36,30,"-",66,"B+",7,21]]],"4RA25CI010":[14,"Dhanush G K","CSE(AIML)",10,10,63,6.3,6.5,[[0,35,21,"-",56,"B",6,24],[1,24,33,"-",57,"B",6,18],[2,34,26,"-",60,"B+",7,21]]],"4RA25CI018":[15,"Hemavathi A S","CSE(AIML)",22,22,139,6.32,6.38,[[0,37,27,"-",64,"B+",7,28],[5,31,9,12,52,"C",5,20],[1,40,33,"-",73,"A",8,24],[7,45,"-",39,84,"A+",9,9],[10,40,"-",20,60,"B+",7,7],[8,40,24,"-",64,"B+",7,7],[4,32,9,18,59,"B",6,24],[3,35,18,"-",53,"C",5,20]]],"4RA25CI019":[16,"Inchara D","CSE(AIML)",7,3,12,1.71,6.42,[[5,29,3,11,43,"F",0,0],[2,29,18,"-",47,"P",4,12]]],"4RA25CI020":[17,"Kamalesh","CSE(AIML)",16,8,38,2.38,5.03,[[0,30,19,"-",49,"P",4,16],[5,25,3,11,39,"F",0,0],[2,34,18,"-",52,"C",5,15],[8,39,21,"-",60,"B+",7,7],[3,35,10,"-",45,"F",0,0]]],"4RA25CI022":[18,"Keerthan Gowda","CSE(AIML)",22,18,87,3.95,5.28,[[0,32,25,"-",57,"B",6,24],[5,25,9,10,44,"P",4,16],[2,33,18,"-",51,"C",5,15],[6,30,18,"-",48,"P",4,12],[3,37,10,"-",47,"F",0,0],[4,30,9,11,50,"C",5,20]]],"4RA25CI025":[19,"Lava Kumar Gowda K V","CSE(AIML)",19,15,74,3.89,5.36,[[0,28,23,"-",51,"C",5,20],[5,25,5,11,41,"F",0,0],[1,21,29,"-",50,"C",5,15],[2,31,18,"-",49,"P",4,12],[8,40,20,"-",60,"B+",7,7],[3,36,18,"-",54,"C",5,20]]],"4RA25CI026":[20,"Likhin B S","CSE(AIML)",4,4,20,5.0,7.18,[[0,25,25,"-",50,"C",5,20]]],"4RA25CI027":[21,"Likhith Gowda M H","CSE(AIML)",29,25,124,4.28,5.36,[[0,31,21,"-",52,"C",5,20],[5,24,5,10,39,"F",0,0],[1,21,28,"-",49,"P",4,12],[2,28,18,"-",46,"P",4,12],[6,29,18,"-",47,"P",4,12],[3,35,24,"-",59,"B",6,24],[9,37,11,10,58,"B",6,24],[4,27,13,11,51,"C",5,20]]],"4RA25CI028":[22,"Manya M R","CSE(AIML)",8,4,24,3.0,6.34,[[0,34,0,"-",34,"F",0,0],[3,39,18,"-",57,"B",6,24]]],"4RA25CI029":[23,"Maruthi Prasad B M","CSE(AIML)",23,15,78,3.39,5.63,[[0,33,22,"-",55,"B",6,24],[5,23,3,11,37,"F",0,0],[2,33,25,"-",58,"B",6,18],[3,35,13,"-",48,"F",0,0],[9,25,9,11,45,"P",4,16],[4,29,9,13,51,"C",5,20]]],"4RA25CI032":[24,"Nishchith Raj H R","CSE(AIML)",14,11,52,3.71,5.57,[[0,29,20,"-",49,"P",4,16],[1,22,24,"-",46,"P",4,12],[2,34,11,"-",45,"F",0,0],[3,38,21,"-",59,"B",6,24]]],"4RA25CI037":[25,"Prathik M M","CSE(AIML)",7,3,12,1.71,5.46,[[5,28,4,0,32,"F",0,0],[1,20,23,"-",43,"P",4,12]]],"4RA25CI039":[26,"Sagar M R","CSE(AIML)",8,0,0,0.0,5.34,[[5,25,4,15,44,"F",0,0],[3,35,4,"-",39,"F",0,0]]],"4RA25CI040":[27,"Sanjayram M A","CSE(AIML)",7,3,18,2.57,5.73,[[1,27,28,"-",55,"B",6,18],[4,29,2,0,31,"F",0,0]]],"4RA25CI043":[28,"Shanthraj B S","CSE(AIML)",26,14,64,2.46,5.36,[[0,29,18,"-",47,"P",4,16],[5,23,6,10,39,"F",0,0],[1,21,30,"-",51,"C",5,15],[2,33,20,"-",53,"C",5,15],[6,28,18,"-",46,"P",4,12],[8,39,20,"-",59,"B",6,6],[3,35,12,"-",47,"F",0,0],[4,29,1,10,40,"F",0,0]]],"4RA25CI047":[29,"Sinchana K","CSE(AIML)",4,4,28,7.0,8.1,[[0,40,26,"-",66,"B+",7,28]]],"4RA25CI051":[30,"Sujay K N","CSE(AIML)",21,14,65,3.1,5.24,[[0,33,20,"-",53,"C",5,20],[1,21,33,"-",54,"C",5,15],[2,28,18,"-",46,"P",4,12],[6,31,18,"-",49,"P",4,12],[8,39,20,"-",59,"B",6,6],[9,29,4,0,33,"F",0,0],[11,35,11,"-",46,"F",0,0]]],"4RA25CI055":[31,"Yadav Sanjeeth N M","CSE(AIML)",1,1,7,7.0,5.73,[[8,43,20,"-",63,"B+",7,7]]],"4RA25CS004":[32,"Aishwarya B K","CSE",4,4,28,7.0,6.98,[[3,36,24,"-",60,"B+",7,28]]],"4RA25CS005":[33,"Aishwarya H R","CSE",4,0,0,0.0,6.53,[[3,38,11,"-",49,"F",0,0]]],"4RA25CS007":[34,"Ajith N S","CSE",21,21,107,5.1,5.43,[[0,32,22,"-",54,"C",5,20],[12,40,22,"-",62,"B+",7,21],[3,32,22,"-",54,"C",5,20],[13,34,18,"-",52,"C",5,15],[14,32,19,"-",51,"C",5,15],[15,28,9,12,49,"P",4,16]]],"4RA25CS008":[35,"Amruth K V","CSE",29,22,135,4.66,6.35,[[0,37,28,"-",65,"B+",7,28],[16,37,18,"-",55,"B",6,18],[3,32,19,"-",51,"C",5,20],[17,30,2,0,32,"F",0,0],[18,50,23,"-",73,"A",8,24],[13,39,9,"-",48,"F",0,0],[14,32,18,"-",50,"C",5,15],[15,29,9,19,57,"B",6,24],[19,38,20,"-",58,"B",6,6]]],"4RA25CS010":[36,"Anushree B Y","CSE",4,0,0,0.0,6.64,[[3,32,4,"-",36,"F",0,0]]],"4RA25CS011":[37,"Arpita Iranna Nilugal","CSE",14,6,27,1.93,5.84,[[3,29,5,"-",34,"F",0,0],[17,25,1,8,34,"F",0,0],[18,30,22,"-",52,"C",5,15],[14,26,18,"-",44,"P",4,12]]],"4RA25CS021":[38,"D K Sowjanya","CSE",7,3,15,2.14,6.33,[[3,32,8,"-",40,"F",0,0],[13,35,18,"-",53,"C",5,15]]],"4RA25CS023":[39,"Deeksha H S","CSE",8,8,40,5.0,6.1,[[3,35,18,"-",53,"C",5,20],[17,32,9,11,52,"C",5,20]]],"4RA25CS024":[40,"Deekshitha K S","CSE",4,4,24,6.0,6.73,[[3,38,18,"-",56,"B",6,24]]],"4RA25CS026":[41,"Dhanu B R","CSE",8,8,56,7.0,7.28,[[3,38,23,"-",61,"B+",7,28],[17,38,9,18,65,"B+",7,28]]],"4RA25CS030":[42,"Dhanyatha C S","CSE",4,0,0,0.0,5.81,[[3,33,7,"-",40,"F",0,0]]],"4RA25CS032":[43,"Disha C","CSE",4,0,0,0.0,6.75,[[3,36,7,"-",43,"F",0,0]]],"4RA25CS033":[44,"Disha H S","CSE",33,1,5,0.15,5.63,[[0,33,10,"-",43,"F",0,0],[20,28,4,11,43,"F",0,0],[16,36,3,"-",39,"F",0,0],[12,31,5,"-",36,"F",0,0],[21,34,20,"-",54,"C",5,5],[3,34,2,"-",36,"F",0,0],[17,28,2,10,40,"F",0,0],[13,31,4,"-",35,"F",0,0],[15,26,1,11,38,"F",0,0],[14,29,4,"-",33,"F",0,0]]],"4RA25CS038":[45,"H R Bhavana","CSE",8,8,48,6.0,7.45,[[0,39,21,"-",60,"B+",7,28],[3,35,18,"-",53,"C",5,20]]],"4RA25CS041":[46,"Hemanth B H","CSE",4,4,24,6.0,7.1,[[3,40,18,"-",58,"B",6,24]]],"4RA25CS045":[47,"I Manju Suhaassan","CSE",33,19,96,2.91,5.42,[[0,31,21,"-",52,"C",5,20],[20,32,9,12,53,"C",5,20],[16,35,18,"-",53,"C",5,15],[21,42,27,"-",69,"B+",7,7],[3,28,18,"-",46,"P",4,16],[17,28,4,12,44,"F",0,0],[18,36,23,"-",59,"B",6,18],[13,35,8,"-",43,"F",0,0],[14,24,3,"-",27,"F",0,0],[15,26,0,0,26,"F",0,0]]],"4RA25CS049":[48,"Jeevan S Nayak","CSE",34,19,111,3.26,6.4,[[0,32,18,"-",50,"C",5,20],[20,31,0,10,41,"F",0,0],[12,40,21,"-",61,"B+",7,21],[21,40,29,"-",69,"B+",7,7],[3,32,18,"-",50,"C",5,20],[17,28,2,5,35,"F",0,0],[18,38,23,"-",61,"B+",7,21],[13,35,18,"-",53,"C",5,15],[14,31,4,"-",35,"F",0,0],[15,27,1,11,39,"F",0,0],[19,41,20,"-",61,"B+",7,7]]],"4RA25CS056":[49,"Kishan L R","CSE",20,4,16,0.8,5.46,[[20,32,0,"-",32,"F",0,0],[3,31,18,"-",49,"P",4,16],[17,28,5,6,39,"F",0,0],[15,29,3,11,43,"F",0,0],[14,32,7,"-",39,"F",0,0],[19,36,0,"-",36,"F",0,0]]],"4RA25CS063":[50,"Lavanya S R","CSE",3,3,18,6.0,7.38,[[13,36,21,"-",57,"B",6,18]]],"4RA25CS074":[51,"Meghana C R","CSE",4,4,28,7.0,6.6,[[0,33,27,"-",60,"B+",7,28]]],"4RA25CS077":[52,"Milana H G","CSE",4,4,28,7.0,6.65,[[0,39,23,"-",62,"B+",7,28]]],"4RA25CS084":[53,"Naveenkumara","CSE",7,7,32,4.57,5.9,[[3,34,20,"-",54,"C",5,20],[13,31,18,"-",49,"P",4,12]]],"4RA25CS085":[54,"Navya M","CSE",4,4,32,8.0,7.6,[[0,38,33,"-",71,"A",8,32]]],"4RA25CS087":[55,"Nikita Ravindra Jahir","CSE",4,4,20,5.0,6.28,[[3,35,18,"-",53,"C",5,20]]],"4RA25CS090":[56,"Nithin B N","CSE",6,6,33,5.5,6.33,[[22,38,18,"-",56,"B",6,18],[13,35,18,"-",53,"C",5,15]]],"4RA25CS091":[57,"Nithin Gowda R","CSE",10,6,24,2.4,4.81,[[3,27,5,"-",32,"F",0,0],[18,20,22,"-",42,"P",4,12],[14,23,18,"-",41,"P",4,12]]],"4RA25CS092":[58,"Nithya P","CSE",4,4,28,7.0,7.2,[[3,35,28,"-",63,"B+",7,28]]],"4RA25CS096":[59,"Pavan H S","CSE",31,31,160,5.16,5.3,[[0,25,19,"-",44,"P",4,16],[20,37,11,13,61,"B+",7,28],[16,41,20,"-",61,"B+",7,21],[12,33,21,"-",54,"C",5,15],[3,29,23,"-",52,"C",5,20],[18,20,24,"-",44,"P",4,12],[13,27,18,"-",45,"P",4,12],[15,30,9,18,57,"B",6,24],[14,29,18,"-",47,"P",4,12]]],"4RA25CS097":[60,"Pavani K S","CSE",4,4,28,7.0,8.28,[[3,42,22,"-",64,"B+",7,28]]],"4RA25CS109":[61,"Rachana","CSE",10,3,15,1.5,6.67,[[3,35,12,"-",47,"F",0,0],[13,33,19,"-",52,"C",5,15],[14,27,12,"-",39,"F",0,0]]],"4RA25CS110":[62,"Raghavi","CSE",18,10,51,2.83,5.13,[[0,35,20,"-",55,"B",6,24],[3,33,10,"-",43,"F",0,0],[17,24,4,11,39,"F",0,0],[13,27,18,"-",45,"P",4,12],[14,28,23,"-",51,"C",5,15]]],"4RA25CS111":[63,"Rahul R Gowda","CSE",26,19,101,3.88,5.76,[[0,35,24,"-",59,"B",6,24],[20,32,0,"-",32,"F",0,0],[12,37,18,"-",55,"B",6,18],[3,34,20,"-",54,"C",5,20],[18,30,22,"-",52,"C",5,15],[17,24,9,13,46,"P",4,16],[13,29,5,"-",34,"F",0,0],[23,34,"-",39,73,"A",8,8]]],"4RA25CS113":[64,"Rakshith Gowda M R","CSE",4,0,0,0.0,6.61,[[3,33,13,"-",46,"F",0,0]]],"4RA25CS121":[65,"Saifullah","CSE",4,4,24,6.0,6.75,[[3,34,24,"-",58,"B",6,24]]],"4RA25CS122":[66,"Samarth S P","CSE",30,27,137,4.57,5.22,[[0,29,27,"-",56,"B",6,24],[20,28,9,13,50,"C",5,20],[16,36,21,"-",57,"B",6,18],[21,36,20,"-",56,"B",6,6],[3,28,29,"-",57,"B",6,24],[18,20,27,"-",47,"P",4,12],[13,28,8,"-",36,"F",0,0],[14,23,22,"-",45,"P",4,12],[15,27,9,11,47,"P",4,16],[19,34,20,"-",54,"C",5,5]]],"4RA25CS125":[67,"Sanjana","CSE",3,3,15,5.0,7.1,[[14,34,19,"-",53,"C",5,15]]],"4RA25CS132":[68,"Shravya V","CSE",4,4,28,7.0,6.95,[[0,36,28,"-",64,"B+",7,28]]],"4RA25CS134":[69,"Sindhu A Y","CSE",4,4,28,7.0,6.38,[[3,35,28,"-",63,"B+",7,28]]],"4RA25CS135":[70,"Soubhagya M K","CSE",8,8,40,5.0,6.41,[[0,33,21,"-",54,"C",5,20],[3,35,19,"-",54,"C",5,20]]],"4RA25CS136":[71,"Soundarya","CSE",8,8,44,5.5,6.23,[[0,33,26,"-",59,"B",6,24],[3,35,18,"-",53,"C",5,20]]],"4RA25CS140":[72,"Suraj G R","CSE",7,7,31,4.43,6.55,[[0,26,18,"-",44,"P",4,16],[13,32,18,"-",50,"C",5,15]]],"4RA25CS143":[73,"T S Dheeraj","CSE",21,7,28,1.33,5.96,[[3,26,2,"-",28,"F",0,0],[18,20,22,"-",42,"P",4,12],[14,31,5,"-",36,"F",0,0],[13,31,5,"-",36,"F",0,0],[0,25,18,"-",43,"P",4,16],[17,24,6,11,41,"F",0,0]]],"4RA25CS146":[74,"Tejaswi A P","CSE",35,0,0,0.0,7.4,[[0,26,10,"-",36,"F",0,0],[20,27,1,0,28,"F",0,0],[16,38,1,"-",39,"F",0,0],[12,41,0,"-",41,"F",0,0],[3,25,5,"-",30,"F",0,0],[18,20,0,"-",20,"F",0,0],[13,31,6,"-",37,"F",0,0],[15,33,0,0,33,"F",0,0],[14,27,7,"-",34,"F",0,0],[17,25,1,0,26,"F",0,0]]],"4RA25CS147":[75,"Thanushree D","CSE",4,4,28,7.0,7.95,[[0,41,24,"-",65,"B+",7,28]]],"4RA25CS150":[76,"Uday Kiran K T","CSE",16,9,50,3.13,6.09,[[0,36,21,"-",57,"B",6,24],[3,35,18,"-",53,"C",5,20],[13,33,10,"-",43,"F",0,0],[15,31,1,0,32,"F",0,0],[19,34,21,"-",55,"B",6,6]]],"4RA25CS151":[77,"Umesh","CSE",8,7,28,3.5,4.97,[[20,25,9,10,44,"P",4,16],[18,20,22,"-",42,"P",4,12],[19,32,13,"-",45,"F",0,0]]],"4RA25CS158":[78,"Vishnu T","CSE",19,11,54,2.84,6.5,[[0,33,21,"-",54,"C",5,20],[20,26,9,11,46,"P",4,16],[3,37,10,"-",47,"F",0,0],[17,28,4,11,43,"F",0,0],[13,35,21,"-",56,"B",6,18]]],"4RA25CS159":[79,"Vishwas G S","CSE",7,7,38,5.43,6.9,[[3,36,18,"-",54,"C",5,20],[13,39,20,"-",59,"B",6,18]]],"4RA25CS160":[80,"Vishwas Urs T R","CSE",8,4,28,3.5,7.22,[[0,39,22,"-",61,"B+",7,28],[3,39,10,"-",49,"F",0,0]]],"4RA25CS162":[81,"Yashaswini M L","CSE",4,4,16,4.0,6.25,[[3,30,18,"-",48,"P",4,16]]],"4RA25CS163":[82,"Yashawanth S P","CSE",8,4,16,2.0,6.33,[[0,29,18,"-",47,"P",4,16],[3,35,10,"-",45,"F",0,0]]],"4RA25CS165":[83,"Yashwanth B K","CSE",4,4,24,6.0,7.05,[[3,37,18,"-",55,"B",6,24]]],"4RA25CS166":[84,"Yathish C M","CSE",4,4,24,6.0,6.98,[[15,34,10,13,57,"B",6,24]]],"4RA25CS167":[85,"Yogaraj H S","CSE",13,9,57,4.38,6.61,[[0,39,23,"-",62,"B+",7,28],[3,39,18,"-",57,"B",6,24],[17,32,6,18,56,"F",0,0],[19,33,20,"-",53,"C",5,5]]],"4RA25CS168":[86,"Yogeesha B S","CSE",3,3,18,6.0,6.53,[[14,38,20,"-",58,"B",6,18]]],"4RA25CV004":[87,"Dhyan M K","Civil",31,20,89,2.87,4.72,[[24,27,20,"-",47,"P",4,16],[25,22,13,11,46,"P",4,16],[26,31,9,13,53,"C",5,20],[27,30,"-",20,50,"C",5,5],[28,23,3,"-",26,"F",0,0],[29,23,7,13,43,"F",0,0],[30,22,25,"-",47,"P",4,12],[31,21,2,"-",23,"F",0,0],[32,32,18,"-",50,"C",5,15],[19,31,22,"-",53,"C",5,5]]],"4RA25CV005":[88,"Hema M","Civil",4,4,20,5.0,7.03,[[28,36,18,"-",54,"C",5,20]]],"4RA25CV006":[89,"Hemanth Acharya M","Civil",28,14,66,2.36,4.85,[[25,24,11,10,45,"P",4,16],[16,27,9,"-",36,"F",0,0],[26,28,3,12,43,"F",0,0],[28,36,18,"-",54,"C",5,20],[29,23,7,11,41,"F",0,0],[30,30,23,"-",53,"C",5,15],[31,22,2,"-",24,"F",0,0],[32,32,18,"-",50,"C",5,15]]],"4RA25CV007":[90,"Keerthan Kumar","Civil",15,8,40,2.67,6.64,[[24,37,18,"-",55,"B",6,24],[28,34,5,"-",39,"F",0,0],[29,26,10,13,49,"P",4,16],[31,33,9,"-",42,"F",0,0]]],"4RA25CV009":[91,"Mohammed Shiyan","Civil",3,3,18,6.0,6.18,[[31,34,21,"-",55,"B",6,18]]],"4RA25CV010":[92,"Mohammed Sinan","Civil",23,15,71,3.09,5.56,[[24,28,24,"-",52,"C",5,20],[25,30,11,10,51,"C",5,20],[26,30,5,13,48,"F",0,0],[28,34,7,"-",41,"F",0,0],[29,22,10,13,45,"P",4,16],[31,33,18,"-",51,"C",5,15]]],"4RA25CV012":[93,"Sufiyan H M","Civil",23,12,53,2.3,5.62,[[24,28,21,"-",49,"P",4,16],[25,28,10,10,48,"P",4,16],[28,29,3,"-",32,"F",0,0],[29,22,7,15,44,"F",0,0],[31,30,1,"-",31,"F",0,0],[32,33,18,"-",51,"C",5,15],[19,38,20,"-",58,"B",6,6]]],"4RA25EC001":[94,"Abhishek Ravasab Neelakar","ECE",22,7,28,1.27,4.76,[[33,28,21,"-",49,"P",4,16],[34,22,2,10,34,"F",0,0],[35,25,18,"-",43,"P",4,12],[36,21,18,"-",39,"F",0,0],[37,29,3,11,43,"F",0,0],[38,30,3,0,33,"F",0,0]]],"4RA25EC002":[95,"Adarsh Gowda","ECE",22,14,63,2.86,5.56,[[33,33,18,"-",51,"C",5,20],[34,26,4,12,42,"F",0,0],[35,33,19,"-",52,"C",5,15],[36,31,18,"-",49,"P",4,12],[39,24,18,"-",42,"P",4,16],[38,31,5,0,36,"F",0,0]]],"4RA25EC003":[96,"Adarsh R","ECE",11,11,52,4.73,6.18,[[36,25,18,"-",43,"P",4,12],[39,28,18,"-",46,"P",4,16],[38,31,9,17,57,"B",6,24]]],"4RA25EC004":[97,"Akash B S","ECE",7,7,35,5.0,5.78,[[33,35,18,"-",53,"C",5,20],[35,28,24,"-",52,"C",5,15]]],"4RA25EC006":[98,"Azmiya Anjum","ECE",12,4,28,2.33,6.63,[[34,26,6,4,36,"F",0,0],[39,29,13,"-",42,"F",0,0],[38,31,16,16,63,"B+",7,28]]],"4RA25EC009":[99,"Chandan M R","ECE",21,3,12,0.57,5.6,[[34,24,5,10,39,"F",0,0],[35,25,18,"-",43,"P",4,12],[40,22,12,"-",34,"F",0,0],[36,21,8,"-",29,"F",0,0],[39,24,2,"-",26,"F",0,0],[37,27,2,10,39,"F",0,0]]],"4RA25EC011":[100,"Deepika","ECE",26,26,130,5.0,5.75,[[33,32,25,"-",57,"B",6,24],[34,26,9,13,48,"P",4,16],[35,29,23,"-",52,"C",5,15],[36,32,18,"-",50,"C",5,15],[39,36,18,"-",54,"C",5,20],[37,29,9,9,47,"P",4,16],[38,32,9,16,57,"B",6,24]]],"4RA25EC015":[101,"Geethanjali K C","ECE",10,10,59,5.9,6.93,[[34,31,9,12,52,"C",5,20],[35,43,20,"-",63,"B+",7,21],[36,35,20,"-",55,"B",6,18]]],"4RA25EC016":[102,"Harsha D R","ECE",24,5,26,1.08,6.27,[[33,28,9,"-",37,"F",0,0],[34,25,4,11,40,"F",0,0],[35,26,18,"-",44,"P",4,12],[36,21,5,"-",26,"F",0,0],[8,42,20,"-",62,"B+",7,7],[39,31,10,"-",41,"F",0,0],[37,29,5,11,45,"F",0,0],[41,41,23,"-",64,"B+",7,7]]],"4RA25EC017":[103,"Harsha D V","ECE",11,7,31,2.82,6.03,[[34,23,5,19,47,"F",0,0],[36,25,27,"-",52,"C",5,15],[39,28,18,"-",46,"P",4,16]]],"4RA25EC018":[104,"Harshitha G D","ECE",14,10,52,3.71,6.44,[[34,25,10,14,49,"P",4,16],[35,38,23,"-",61,"B+",7,21],[36,33,18,"-",51,"C",5,15],[39,32,10,"-",42,"F",0,0]]],"4RA25EC020":[105,"Karthik H K","ECE",7,7,46,6.57,7.26,[[42,38,18,"-",56,"B",6,18],[38,34,12,14,60,"B+",7,28]]],"4RA25EC022":[106,"Kishan Gowda K M","ECE",4,4,24,6.0,6.65,[[39,30,25,"-",55,"B",6,24]]],"4RA25EC023":[107,"Leelavathi B N","ECE",3,3,24,8.0,7.43,[[36,32,39,"-",71,"A",8,24]]],"4RA25EC024":[108,"Madeeha Baig","ECE",10,10,55,5.5,6.63,[[34,25,11,13,49,"P",4,16],[35,39,28,"-",67,"B+",7,21],[36,29,29,"-",58,"B",6,18]]],"4RA25EC025":[109,"Manjunatha","ECE",18,6,27,1.5,5.5,[[34,22,5,12,39,"F",0,0],[40,34,18,"-",52,"C",5,15],[36,21,25,"-",46,"P",4,12],[39,26,12,"-",38,"F",0,0],[38,30,5,17,52,"F",0,0]]],"4RA25EC027":[110,"Namith G H","ECE",3,3,21,7.0,6.73,[[36,28,32,"-",60,"B+",7,21]]],"4RA25EC028":[111,"Nandeesh B B","ECE",3,3,15,5.0,6.65,[[35,32,18,"-",50,"C",5,15]]],"4RA25EC032":[112,"Noorul Huda","ECE",4,4,28,7.0,7.35,[[39,33,27,"-",60,"B+",7,28]]],"4RA25EC035":[113,"Prajwalgowda D N","ECE",11,11,55,5.0,5.94,[[36,32,18,"-",50,"C",5,15],[39,27,19,"-",46,"P",4,16],[38,33,9,13,55,"B",6,24]]],"4RA25EC037":[114,"Purushothama A R","ECE",6,6,27,4.5,5.28,[[35,36,18,"-",54,"C",5,15],[36,24,19,"-",43,"P",4,12]]],"4RA25EC040":[115,"Roja","ECE",26,22,116,4.46,5.67,[[33,33,24,"-",57,"B",6,24],[34,26,6,13,45,"F",0,0],[35,28,21,"-",49,"P",4,12],[36,27,22,"-",49,"P",4,12],[39,31,18,"-",49,"P",4,16],[37,32,11,20,63,"B+",7,28],[38,32,9,17,58,"B",6,24]]],"4RA25EC041":[116,"Ruchitha K K","ECE",26,18,86,3.31,5.28,[[33,30,18,"-",48,"P",4,16],[34,24,3,11,38,"F",0,0],[35,29,22,"-",51,"C",5,15],[36,32,19,"-",51,"C",5,15],[39,30,9,"-",39,"F",0,0],[37,31,9,10,50,"C",5,20],[38,32,9,13,54,"C",5,20]]],"4RA25EC042":[117,"Sagar G D","ECE",14,14,87,6.21,6.25,[[35,34,29,"-",63,"B+",7,21],[36,25,33,"-",58,"B",6,18],[39,32,22,"-",54,"C",5,20],[38,33,12,20,65,"B+",7,28]]],"4RA25EC043":[118,"Sanika S S","ECE",3,3,24,8.0,7.83,[[36,37,33,"-",70,"A",8,24]]],"4RA25EC045":[119,"Sindhu Mayuri","ECE",3,3,18,6.0,7.38,[[35,33,23,"-",56,"B",6,18]]],"4RA25EC046":[120,"Surashree R","ECE",7,7,45,6.43,6.78,[[35,39,22,"-",61,"B+",7,21],[39,38,20,"-",58,"B",6,24]]],"4RA25EC047":[121,"V Varsha","ECE",18,10,56,3.11,5.69,[[33,32,18,"-",50,"C",5,20],[43,40,25,"-",65,"B+",7,21],[35,27,23,"-",50,"C",5,15],[39,26,8,"-",34,"F",0,0],[38,32,6,13,51,"F",0,0]]],"4RA25EC052":[122,"Vivin Surya","ECE",4,4,28,7.0,7.78,[[39,35,28,"-",63,"B+",7,28]]],"4RA25EC053":[123,"Y M Monika","ECE",4,4,28,7.0,7.38,[[39,34,32,"-",66,"B+",7,28]]],"4RA25EC055":[124,"Yashaswini","ECE",7,7,32,4.57,6.38,[[34,30,9,12,51,"C",5,20],[35,31,18,"-",49,"P",4,12]]],"4RA25EC056":[125,"Yashwanth K S","ECE",18,10,49,2.72,5.75,[[34,28,4,11,43,"F",0,0],[35,33,21,"-",54,"C",5,15],[36,33,26,"-",59,"B",6,18],[39,28,19,"-",47,"P",4,16],[38,31,9,0,40,"F",0,0]]],"4RA25EC058":[126,"Yashwanth M R","ECE",15,8,32,2.13,5.59,[[34,24,9,10,43,"P",4,16],[36,21,18,"-",39,"F",0,0],[39,29,18,"-",47,"P",4,16],[38,31,1,0,32,"F",0,0]]],"4RA25EE001":[127,"Ankitharadhya G R","EEE",19,15,71,3.74,5.31,[[33,28,22,"-",50,"C",5,20],[44,27,9,10,46,"P",4,16],[35,35,19,"-",54,"C",5,15],[37,28,6,17,51,"F",0,0],[38,29,10,15,54,"C",5,20]]],"4RA25EE002":[128,"Balaji B V","EEE",7,7,34,4.86,5.75,[[35,37,20,"-",57,"B",6,18],[39,30,18,"-",48,"P",4,16]]],"4RA25EE007":[129,"Jeevan M S","EEE",20,12,54,2.7,5.28,[[33,27,18,"-",45,"P",4,16],[44,24,12,11,47,"P",4,16],[35,35,18,"-",53,"C",5,15],[8,44,20,"-",64,"B+",7,7],[39,26,8,"-",34,"F",0,0],[38,31,9,0,40,"F",0,0]]],"4RA25EE010":[130,"Maaz P","EEE",12,8,44,3.67,6.27,[[33,34,21,"-",55,"B",6,24],[44,29,10,15,54,"C",5,20],[38,32,6,0,38,"F",0,0]]],"4RA25EE011":[131,"Mahanthesh M","EEE",28,20,105,3.75,5.52,[[33,26,7,"-",33,"F",0,0],[44,23,9,11,43,"P",4,16],[35,35,18,"-",53,"C",5,15],[45,27,20,"-",47,"P",4,12],[46,35,26,"-",61,"B+",7,7],[39,35,18,"-",53,"C",5,20],[37,35,5,10,50,"F",0,0],[11,46,18,"-",64,"B+",7,21],[41,35,29,"-",64,"B+",7,7],[47,40,"-",20,60,"B+",7,7]]],"4RA25EE014":[132,"Purushotham Gowda B K","EEE",4,4,28,7.0,7.25,[[44,35,13,14,62,"B+",7,28]]],"4RA25EE016":[133,"Rehan Pasha","EEE",4,4,20,5.0,7.03,[[39,33,21,"-",54,"C",5,20]]],"4RA25EE018":[134,"Sagar H A","EEE",3,3,18,6.0,7.65,[[35,38,21,"-",59,"B",6,18]]],"4RA25EE019":[135,"Sahana C D","EEE",17,6,36,2.12,6.28,[[44,27,6,8,41,"F",0,0],[35,43,18,"-",61,"B+",7,21],[45,30,0,"-",30,"F",0,0],[39,33,5,"-",38,"F",0,0],[11,36,18,"-",54,"C",5,15]]],"4RA25EE021":[136,"Vinuth Daniel","EEE",7,7,34,4.86,5.58,[[44,23,9,13,45,"P",4,16],[35,36,20,"-",56,"B",6,18]]],"4RA25EE022":[137,"Yashaswini G N","EEE",7,7,38,5.43,6.18,[[44,27,12,14,53,"C",5,20],[11,36,19,"-",55,"B",6,18]]],"4RA25EE024":[138,"Yashwanth Puvi","EEE",15,11,61,4.07,6.33,[[44,24,11,14,49,"P",4,16],[35,39,27,"-",66,"B+",7,21],[39,27,12,"-",39,"F",0,0],[38,30,9,16,55,"B",6,24]]],"4RA25EE025":[139,"Preetham H","EEE",24,20,89,3.71,4.81,[[44,24,10,11,45,"P",4,16],[48,22,23,"-",45,"P",4,12],[35,34,18,"-",52,"C",5,15],[8,46,22,"-",68,"B+",7,7],[39,26,20,"-",46,"P",4,16],[37,27,9,10,46,"P",4,16],[38,30,4,0,34,"F",0,0],[41,35,33,"-",68,"B+",7,7]]],"4RA25IS001":[140,"Abhishek A C","ISE",15,8,52,3.47,7.0,[[0,40,23,"-",63,"B+",7,28],[3,37,18,"-",55,"B",6,24],[14,34,8,"-",42,"F",0,0],[15,37,2,0,39,"F",0,0]]],"4RA25IS003":[141,"Ajay B L","ISE",16,12,59,3.69,5.44,[[0,26,29,"-",55,"B",6,24],[21,43,21,"-",64,"B+",7,7],[3,30,19,"-",49,"P",4,16],[14,29,18,"-",47,"P",4,12],[13,27,10,"-",37,"F",0,0],[19,40,13,"-",53,"F",0,0]]],"4RA25IS004":[142,"Aneesh A","ISE",28,10,43,1.54,5.76,[[0,27,21,"-",48,"P",4,16],[20,25,6,10,41,"F",0,0],[12,30,9,"-",39,"F",0,0],[3,26,13,"-",39,"F",0,0],[17,26,1,11,38,"F",0,0],[18,21,30,"-",51,"C",5,15],[13,31,18,"-",49,"P",4,12],[14,31,9,"-",40,"F",0,0]]],"4RA25IS006":[143,"Arpitha G V","ISE",11,11,67,6.09,7.15,[[0,36,25,"-",61,"B+",7,28],[3,39,18,"-",57,"B",6,24],[13,36,18,"-",54,"C",5,15]]],"4RA25IS007":[144,"Chandan Gowda G R","ISE",26,11,48,1.85,5.36,[[0,24,18,"-",42,"P",4,16],[3,25,26,"-",51,"C",5,20],[17,25,1,12,38,"F",0,0],[18,20,24,"-",44,"P",4,12],[13,27,8,"-",35,"F",0,0],[14,30,3,"-",33,"F",0,0],[15,31,1,0,32,"F",0,0],[19,36,12,"-",48,"F",0,0]]],"4RA25IS008":[145,"Chethan Gowda A B","ISE",21,7,32,1.52,5.38,[[0,33,21,"-",54,"C",5,20],[3,29,0,"-",29,"F",0,0],[17,26,1,12,39,"F",0,0],[18,20,27,"-",47,"P",4,12],[13,32,0,"-",32,"F",0,0],[14,32,0,"-",32,"F",0,0]]],"4RA25IS012":[146,"Geetha R Gowli","ISE",8,8,48,6.0,7.05,[[0,31,26,"-",57,"B",6,24],[3,38,19,"-",57,"B",6,24]]],"4RA25IS013":[147,"Haleema Tasneem","ISE",4,3,18,4.5,6.38,[[13,38,18,"-",56,"B",6,18],[19,36,8,"-",44,"F",0,0]]],"4RA25IS014":[148,"Iftesha Ayman","ISE",10,10,61,6.1,5.85,[[13,33,18,"-",51,"C",5,15],[14,38,18,"-",56,"B",6,18],[15,32,9,21,62,"B+",7,28]]],"4RA25IS015":[149,"Jenifer J","ISE",10,10,50,5.0,6.3,[[0,33,19,"-",52,"C",5,20],[13,33,18,"-",51,"C",5,15],[14,35,19,"-",54,"C",5,15]]],"4RA25IS017":[150,"Lahari V","ISE",8,4,20,2.5,6.83,[[0,34,18,"-",52,"C",5,20],[3,37,9,"-",46,"F",0,0]]],"4RA25IS018":[151,"Manasa D N","ISE",15,4,16,1.07,6.76,[[0,28,19,"-",47,"P",4,16],[3,37,13,"-",50,"F",0,0],[17,26,6,11,43,"F",0,0],[13,36,10,"-",46,"F",0,0]]],"4RA25IS020":[152,"Manoj B T","ISE",25,10,40,1.6,5.64,[[0,27,18,"-",45,"P",4,16],[20,29,2,11,42,"F",0,0],[3,26,1,"-",27,"F",0,0],[17,26,2,3,31,"F",0,0],[18,20,24,"-",44,"P",4,12],[13,22,7,"-",29,"F",0,0],[14,28,18,"-",46,"P",4,12]]],"4RA25IS022":[153,"Meshak R R","ISE",4,4,16,4.0,5.05,[[3,25,18,"-",43,"P",4,16]]],"4RA25IS024":[154,"Preetam Ramu Savadatti","ISE",7,7,43,6.14,6.55,[[0,36,28,"-",64,"B+",7,28],[13,33,20,"-",53,"C",5,15]]],"4RA25IS025":[155,"Purushotham K P","ISE",4,4,28,7.0,6.03,[[3,36,27,"-",63,"B+",7,28]]],"4RA25IS026":[156,"Roshan","ISE",32,17,77,2.41,5.32,[[0,26,18,"-",44,"P",4,16],[20,24,9,11,44,"P",4,16],[16,38,18,"-",56,"B",6,18],[3,29,9,"-",38,"F",0,0],[17,25,4,10,39,"F",0,0],[18,20,29,"-",49,"P",4,12],[13,32,18,"-",50,"C",5,15],[14,27,2,"-",29,"F",0,0],[15,32,4,0,36,"F",0,0]]],"4RA25IS027":[157,"Sandeep K","ISE",4,4,28,7.0,7.58,[[3,42,27,"-",69,"B+",7,28]]],"4RA25IS031":[158,"Vedamurthy K S","ISE",7,3,15,2.14,6.36,[[13,33,18,"-",51,"C",5,15],[15,35,2,14,51,"F",0,0]]],"4RA25IS036":[159,"Yashas Gowda K R","ISE",25,15,80,3.2,6.2,[[0,36,22,"-",58,"B",6,24],[3,24,18,"-",42,"P",4,16],[17,26,7,11,44,"F",0,0],[18,20,0,"-",20,"F",0,0],[13,31,18,"-",49,"P",4,12],[14,30,3,"-",33,"F",0,0],[15,34,13,22,69,"B+",7,28]]],"4RA25ME003":[160,"Chethan D S","ME",27,16,78,2.89,5.03,[[49,30,28,"-",58,"B",6,24],[50,30,11,10,51,"C",5,20],[16,24,18,"-",42,"P",4,12],[26,30,3,12,45,"F",0,0],[51,25,21,"-",46,"P",4,16],[52,26,1,10,37,"F",0,0],[31,21,8,"-",29,"F",0,0],[19,35,21,"-",56,"B",6,6]]],"4RA25ME004":[161,"Darshan P","ME",11,11,52,4.73,5.59,[[50,30,11,11,52,"C",5,20],[51,33,18,"-",51,"C",5,20],[53,30,18,"-",48,"P",4,12]]],"4RA25ME006":[162,"Dhruvanth G M","ME",24,13,62,2.58,5.28,[[49,32,22,"-",54,"C",5,20],[50,27,10,13,50,"C",5,20],[26,32,4,12,48,"F",0,0],[51,27,18,"-",45,"P",4,16],[52,22,5,10,37,"F",0,0],[31,21,18,"-",39,"F",0,0],[19,36,22,"-",58,"B",6,6]]],"4RA25ME007":[163,"Harshith","ME",22,0,0,0.0,5.61,[[49,30,10,"-",40,"F",0,0],[26,30,4,11,45,"F",0,0],[51,28,1,"-",29,"F",0,0],[52,22,2,11,35,"F",0,0],[31,25,3,"-",28,"F",0,0],[53,28,11,"-",39,"F",0,0]]],"4RA25ME008":[164,"Hemanth G D","ME",3,0,0,0.0,6.32,[[54,38,0,"-",38,"F",0,0]]],"4RA25ME009":[165,"KEERTHI K S","ME",1,1,7,7.0,6.55,[[55,45,"-",23,68,"B+",7,7]]],"4RA25ME010":[166,"Kruthik H L","ME",23,12,72,3.13,6.34,[[49,34,9,"-",43,"F",0,0],[50,32,11,18,61,"B+",7,28],[26,40,2,12,54,"F",0,0],[52,29,9,12,50,"C",5,20],[51,31,27,"-",58,"B",6,24],[31,25,2,"-",27,"F",0,0]]],"4RA25ME011":[167,"Mahesh Basavaraj Ganjigatti","ME",11,0,0,0.0,5.48,[[26,36,5,13,54,"F",0,0],[51,30,8,"-",38,"F",0,0],[31,34,12,"-",46,"F",0,0]]],"4RA25ME012":[168,"Mithun M","ME",33,18,82,2.48,4.8,[[50,20,9,12,41,"P",4,16],[49,26,18,"-",44,"P",4,16],[16,37,18,"-",55,"B",6,18],[12,32,18,"-",50,"C",5,15],[26,20,1,11,32,"F",0,0],[51,25,2,"-",27,"F",0,0],[52,22,1,11,34,"F",0,0],[31,21,5,"-",26,"F",0,0],[53,28,18,"-",46,"P",4,12],[19,33,20,"-",53,"C",5,5]]],"4RA25ME014":[169,"Pooja A S","ME",12,0,0,0.0,5.93,[[49,31,12,"-",43,"F",0,0],[50,31,9,7,47,"F",0,0],[51,31,7,"-",38,"F",0,0]]],"4RA25ME015":[170,"Prajwal Somashekar","ME",8,8,48,6.0,5.97,[[50,30,10,12,52,"C",5,20],[26,39,11,13,63,"B+",7,28]]],"4RA25ME016":[171,"Rajesh C A","ME",26,15,79,3.04,5.79,[[49,32,18,"-",50,"C",5,20],[50,30,10,11,51,"C",5,20],[26,35,9,11,55,"B",6,24],[51,29,8,"-",37,"F",0,0],[52,25,4,15,44,"F",0,0],[31,33,7,"-",40,"F",0,0],[53,30,23,"-",53,"C",5,15]]],"4RA25ME017":[172,"Rohithkumar G R","ME",4,4,25,6.25,6.58,[[31,36,20,"-",56,"B",6,18],[19,39,21,"-",60,"B+",7,7]]],"4RA25ME018":[173,"Sagar H M","ME",11,8,44,4.0,5.7,[[26,37,10,13,60,"B+",7,28],[51,31,18,"-",49,"P",4,16],[31,29,11,"-",40,"F",0,0]]],"4RA25ME021":[174,"Suhaas Gowda N N","ME",19,19,92,4.84,6.2,[[49,32,18,"-",50,"C",5,20],[50,30,9,10,49,"P",4,16],[26,36,9,12,57,"B",6,24],[51,33,19,"-",52,"C",5,20],[31,31,18,"-",49,"P",4,12]]],"4RA25ME022":[175,"Vedaprakash B J","ME",8,0,0,0.0,6.56,[[49,37,0,"-",37,"F",0,0],[51,30,10,"-",40,"F",0,0]]],"4RA25VL002":[176,"Nagaraj","EC(VLSI)",14,10,60,4.29,6.11,[[36,33,18,"-",51,"C",5,15],[35,40,23,"-",63,"B+",7,21],[39,28,11,"-",39,"F",0,0],[38,32,9,18,59,"B",6,24]]],"4RA25VL004":[177,"Nikhil Gowda B","EC(VLSI)",3,3,21,7.0,7.05,[[36,29,32,"-",61,"B+",7,21]]],"4RA25VL005":[178,"Nitin","EC(VLSI)",17,17,87,5.12,5.68,[[43,35,25,"-",60,"B+",7,21],[35,34,23,"-",57,"B",6,18],[36,21,23,"-",44,"P",4,12],[39,30,18,"-",48,"P",4,16],[38,32,10,12,54,"C",5,20]]],"4RA25VL006":[179,"Syed Suhaib","EC(VLSI)",7,3,12,1.71,6.03,[[36,23,18,"-",41,"P",4,12],[38,30,1,0,31,"F",0,0]]],"4RA25VL007":[180,"Tharun M","EC(VLSI)",7,7,48,6.86,7.25,[[35,39,31,"-",70,"A",8,24],[39,31,24,"-",55,"B",6,24]]]}};
+
+    document.getElementById('printDate').textContent = new Date().toLocaleDateString('en-IN', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+
+    document.getElementById('usnForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      lookupUSN(document.getElementById('usnInput').value);
+    });
+
+    function lookupUSN(rawUsn) {
+      const usn = String(rawUsn || '').trim().toUpperCase();
+      const errorBox = document.getElementById('errorBox');
+      const resultSection = document.getElementById('resultSection');
+
+      if (!usn) return;
+
+      const record = DB.students[usn];
+      if (!record) {
+        resultSection.classList.add('hidden');
+        errorBox.classList.remove('hidden');
+        document.getElementById('errorText').textContent =
+          `No Summer Semester RV result record was found for USN "${usn}". Please verify your 10-character USN and try again.`;
+        return;
+      }
+
+      errorBox.classList.add('hidden');
+      resultSection.classList.remove('hidden');
+
+      const [sl, name, branch, crReg, crEarn, totCp, sgpa, cgpa, courses] = record;
+
+      document.getElementById('stuName').textContent = name;
+      document.getElementById('stuUsn').textContent = usn;
+      document.getElementById('stuBranch').textContent = branch;
+      document.getElementById('stuSl').textContent = sl;
+      document.getElementById('stuCrReg').textContent = crReg;
+      document.getElementById('stuCrEarn').textContent = crEarn;
+      document.getElementById('stuTotCp').textContent = totCp;
+      document.getElementById('stuSgpa').textContent = Number(sgpa).toFixed(2);
+      document.getElementById('stuCgpa').textContent = Number(cgpa).toFixed(2);
+
+      const allPassed = courses.every(c => c[5] !== 'F');
+      const badgeEl = document.getElementById('overallStatusBadge');
+      if (allPassed) {
+        badgeEl.innerHTML = `<span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase bg-emerald-500 text-slate-950 shadow">PASS</span>`;
+      } else {
+        badgeEl.innerHTML = `<span class="px-3.5 py-1.5 rounded-full text-xs font-extrabold uppercase bg-red-500 text-white shadow">FAIL</span>`;
+      }
+
+      let hasAmpersand = false;
+      let hasDollar = false;
+
+      const tbody = document.getElementById('courseTableBody');
+      tbody.innerHTML = courses.map(c => {
+        const [cIdx, cie, th, pr, tot, gr, gp, cp] = c;
+        const [code, type, title, credit] = DB.courses[cIdx];
+
+        if (title.endsWith('&')) hasAmpersand = true;
+        if (title.endsWith('\$')) hasDollar = true;
+
+        const isFail = gr === 'F';
+        const badgeClass = isFail
+          ? 'bg-red-100 text-red-700 border border-red-300'
+          : 'bg-emerald-100 text-emerald-800 border border-emerald-300';
+
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 px-3 font-mono font-bold text-slate-900">${code}</td>
+            <td class="py-2.5 px-3 text-slate-500 font-medium">${type}</td>
+            <td class="py-2.5 px-3 font-medium text-slate-800">${title}</td>
+            <td class="py-2.5 px-3 text-center">${credit}</td>
+            <td class="py-2.5 px-3 text-center">${cie}</td>
+            <td class="py-2.5 px-3 text-center">${th}</td>
+            <td class="py-2.5 px-3 text-center">${pr}</td>
+            <td class="py-2.5 px-3 text-center font-bold text-slate-900">${tot}</td>
+            <td class="py-2.5 px-3 text-center">
+              <span class="px-2.5 py-0.5 rounded-md font-extrabold text-xs ${badgeClass}">${gr}</span>
+            </td>
+            <td class="py-2.5 px-3 text-center font-semibold">${gp}</td>
+            <td class="py-2.5 px-3 text-center font-semibold">${cp}</td>
+          </tr>
+        `;
+      }).join('');
+
+      const footnoteEl = document.getElementById('rvFootnote');
+      if (hasAmpersand || hasDollar) {
+        footnoteEl.classList.remove('hidden');
+        const notes = [];
+        if (hasAmpersand) notes.push(`<strong>&amp;</strong> : Cleared during RV, but applied for Summer.`);
+        if (hasDollar) notes.push(`<strong>$</strong> : Cleared during RV, but appeared for Summer.`);
+        footnoteEl.innerHTML = notes.join('<br/>');
+      } else {
+        footnoteEl.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
